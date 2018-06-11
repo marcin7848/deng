@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ExeEng - Today</title>
+    <link rel="icon" href="./view/images/favicon.ico" />
+    <link rel="stylesheet" href="./view/cssJS/layout.css">
+    <script src="./view/cssJS/jquery-3.2.1.js"></script>
+    <script src="./view/cssJS/script.js"></script>
+    <script src="./view/cssJS/exeJS.js"></script>
+    <script type="text/javascript">
+        var voiceMap = [];
+        var myText = "";
+
+        $(document).ready(function() {
+            $("#answer").focus();
+            $("#nextWord").focus();
+
+            myText = document.getElementById('myText');
+            myText = myText.value;
+
+            myText = myText.replace("sb\'s", "somebody\'s");
+            myText = myText.replace("sb", "somebody");
+            myText = myText.replace("sth", "something");
+
+            myText = myText.replace(";", "\'");
+
+
+            function loadVoices() {
+                var voices = speechSynthesis.getVoices();
+                for (var i = 0; i < voices.length; i++) {
+                    var voice = voices[i];
+                    voiceMap[voice.name] = voice;
+                }
+            }
+
+            window.speechSynthesis.onvoiceschanged = function (e) {
+                loadVoices();
+            };
+
+            setTimeout(function(){speak();}, 100);
+
+        });
+
+        function speak(){
+            var msg = new SpeechSynthesisUtterance();
+            msg.volume = 1;
+            msg.voice = voiceMap['Google US English'];
+            msg.rate = 0.7;
+            msg.Pitch = 1;
+            msg.text = myText;
+            window.speechSynthesis.speak(msg);
+        }
+
+    </script>
+</head>
+<body>
+<div id="main">
+    <div id="header">
+        <a href="index.php?archive">Archiwum</a>
+        <a href="index.php?exeJava">Java</a>
+        <a href="index.php?exeDeu">Deutsch Exe</a>
+        <a href="index.php?deu">Deutsch</a>
+        <a href="index.php?exeEng">English Exe</a>
+        <a href="index.php?eng">English</a>
+        <a href="index.php">Note</a>
+    </div>
+    <div id="bodyToday">
+        <div class="sectionToday">
+            Do końca pozostało: <?php echo $countWordsToEnd; ?>
+        </div>
+        <div class="sectionToday">
+            <table id="engTable" class="todayTable">
+                <tr>
+                    <td>ID</td>
+                    <td colspan="2">Słowo</td>
+                    <td>Odpowiedź</td>
+                    <td>+</td>
+                </tr>
+                <tr>
+                    <form action="index.php?exeEng&today" method="POST">
+                        <?php
+                        $toSay = "";
+
+                        if($showFirstBase == 0){ ?>
+
+                        <td><?php echo $showWord['id']; ?></td>
+
+                        <?php
+                            if(!strpos($showWord['question'], '...')){
+                        ?>
+                        <td colspan="2"><?php echo $showWord['question']; ?></td>
+                        <td><input type="text" id="answer" name="answer" size="10" maxlength="3000" autocomplete="off" /></td>
+
+
+                        <?php
+                            }
+                            else
+                            {
+                        ?>
+
+                            <?php
+                            $sides = explode('...', $showWord['question']);
+                            echo "<td>".$sides[0]."</td>";
+                            if(empty($showWord['otherAnswers']))
+                            {
+                               echo '<td><input type="text" id="answer" name="answer" size="10" maxlength="3000" autocomplete="off" /></td>';
+                            }
+                            else{
+                                $rand = mt_rand(1,4);
+                                $count = 1;
+                                echo "<td>";
+                                foreach($showWord['otherAnswers'] as $sW){
+                                    if($rand == $count)
+                                    {
+                                        echo '<input type="radio" name="answer" value="'.$showWord["answer"].'" />'.$showWord["answer"].'<br />';
+                                    }
+                                    echo '<input type="radio" name="answer" value="'.$sW.'" />'.$sW.'<br />';
+
+                                    if(($rand == 4) && ($count == 3))
+                                    {
+                                        echo '<input type="radio" name="answer" value="'.$showWord["answer"].'" />'.$showWord["answer"].'<br />';
+                                    }
+                                    $count++;
+                                }
+                                echo "</td>";
+                            }
+
+                            echo "<td>".$sides[1]."</td>";
+                            ?>
+
+                        <?php
+                            }
+                        ?>
+
+                        <input type="hidden" name="comment" value="<?php echo $showWord['comment'];  ?> ">
+                        <input type="hidden" name="working" value="<?php echo $showWord['working'];  ?> ">
+                        <input type="hidden" name="wordSide" value="<?php echo $showWord['wordSide'];  ?> ">
+                        <input type="hidden" name="id" value="<?php echo $showWord['id'];  ?> ">
+                        <td><input name="sendAnswer" type="submit" value="+"></td>
+
+
+
+                        <?php
+                            }
+                            else
+                            {
+                        ?>
+
+                        <?php
+                            if(!strpos($tab["question"], '...')){
+                        ?>
+
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $tab['id']; ?></td>
+                        <td colspan="2" onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $tab['question']; ?></td>
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $tab['answer']; ?></td>
+
+                        <td bgcolor='<?php echo $tab["color"]; ?>'><input id="nextWord" name="nextWord" type="submit" value="+"></td>
+
+
+                        <?php
+                                if($tab['wordSide'] == 1){
+                                    $toSay = $tab['answer'];
+                                }
+                                else{
+                                    $toSay = $tab['question'];
+                                }
+                            }
+                            else
+                            {
+                                $sides = explode('...', $tab['question']);
+
+                                $toSay = $sides[0].' '.$tab['answer'].' '.$sides[1];
+                        ?>
+
+
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $tab['id']; ?></td>
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $sides[0]; ?></td>
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $tab['answer']; ?></td>
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $sides[1]; ?></td>
+
+                        <td bgcolor='<?php echo $tab["color"]; ?>'><input id="nextWord" name="nextWord" type="submit" value="+"></td>
+
+
+                        <?php
+                            }
+                        ?>
+
+
+
+
+
+                        <input type="hidden" id="myText" value="<?php
+                            echo $toSay;
+                        ?>">
+                        <?php
+                            }
+                        ?>
+                    </form>
+                </tr>
+                <tr><td colspan="5"><?php if(isset($showWord['comment'])){
+                    echo $showWord['comment'];
+                }else{
+                    echo $tab['comment'];
+                }
+                ?></td></tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

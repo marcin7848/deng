@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Note</title>
+    <link rel="icon" href="./view/images/favicon.ico" />
+    <link rel="stylesheet" href="./view/cssJS/layout.css">
+    <script src="./view/cssJS/jquery-3.2.1.js"></script>
+    <script src="./view/cssJS/script.js"></script>
+
+</head>
+<body>
+    <div id="main">
+        <div id="header">
+            <a href="index.php?archive">Archiwum</a>
+            <a href="index.php?exeJava">Java</a>
+            <a href="index.php?exeDeu">Deutsch Exe</a>
+            <a href="index.php?deu">Deutsch</a>
+            <a href="index.php?exeEng">English Exe</a>
+            <a href="index.php?eng">English</a>
+            <a href="index.php">Note</a>
+        </div>
+        <div id="body">
+            <div id="noteWorks">
+            <ul>
+                <?php
+                foreach($showWorks as $sW){
+                    $color = "";
+
+                    if($sW->getCountDone() >= $sW->getCount()){
+                        $color = "style='color: #006600;'";
+                    }
+
+                    echo '<li '.$color.'>'.$sW->getDescription().' - '.$sW->getCount().'/'.$sW->getCountDone().'</li>';
+                }
+                ?>
+            </ul>
+                <a href="index.php?logout" style="color: #FFF;">Wyloguj</a>
+            </div>
+            <div id="noteMain">
+                <table id="noteTable">
+                    <tr>
+                        <td>Data</td>
+                        <td>Eng</td>
+                        <td>Eng Exe</td>
+                        <td>Deu</td>
+                        <td>Deu Exe</td>
+                        <td>Java</td>
+                    </tr>
+
+                    <?php
+                        foreach($showNote as $sN){
+
+                            $noteRepo = new noteRepo();
+
+                            $dateTime = new DateTime($sN->getDate());
+                            $nowTime = new DateTime();
+
+                            $toSub = new DateInterval('PT24H');
+                            $nowTime->sub($toSub);
+
+                            $date = $dateTime->format("d-m-Y");
+                            $showJustification = "";
+                            if($noteRepo->showStatusCell($sN) == 1)
+                            {
+                                $showJustification = "onclick='showJustification(".$sN->getId().")'";
+                            }
+                            else{
+                                $showJustification = "onclick='showJustification(0)'";
+                            }
+
+                            echo "<tr>";
+                            echo "<td ".$showJustification.">".$date."</td>";
+
+                            $statusCell = $noteRepo->getStatusCell($dateTime, $nowTime, $sN->getDone(), $sN->getEng());
+                            $color = $noteRepo->getColorCell($statusCell);
+
+                            $justification = "<a class='showJustification' href='#'>Usp<span>".$sN->getJustification()."</span></a>";
+
+                            if($statusCell == 2){
+                                $sN->setEng($justification);
+                            }
+                            echo "<td style='background-color: ".$color.";'>".$sN->getEng()."</td>";
+
+
+                            $statusCell = $noteRepo->getStatusCell($dateTime, $nowTime, $sN->getDone(), $sN->getEngExe());
+                            $color = $noteRepo->getColorCell($statusCell);
+
+                            if($statusCell == 2){
+                                $sN->setEngExe($justification);
+                            }
+                            echo "<td style='background-color: ".$color.";'>".$sN->getEngExe()."</td>";
+
+
+                            $statusCell = $noteRepo->getStatusCell($dateTime, $nowTime, $sN->getDone(), $sN->getDeu());
+                            $color = $noteRepo->getColorCell($statusCell);
+                            if($statusCell == 2){
+                                $sN->setDeu($justification);
+                            }
+                            echo "<td style='background-color: ".$color.";'>".$sN->getDeu()."</td>";
+
+
+                            $statusCell = $noteRepo->getStatusCell($dateTime, $nowTime, $sN->getDone(), $sN->getDeuExe());
+                            $color = $noteRepo->getColorCell($statusCell);
+                            if($statusCell == 2){
+                                $sN->setDeuExe($justification);
+                            }
+                            echo "<td style='background-color: ".$color.";'>".$sN->getDeuExe()."</td>";
+
+                            $statusCell = $noteRepo->getStatusCell($dateTime, $nowTime, $sN->getDone(), $sN->getJavaExe());
+                            $color = $noteRepo->getColorCell($statusCell);
+                            if($statusCell == 2){
+                                $sN->setJavaExe($justification);
+                            }
+
+                            echo "<td style='background-color: ".$color.";'>".$sN->getJavaExe()."</td>";
+
+
+                            echo "</tr>";
+                        }
+                    ?>
+                    <tr>
+
+                    </tr>
+                </table>
+                <div style="width: 100%; text-align: center;">
+                    <form action="index.php?note" method="POST">
+                        <input type="submit" name="add7Days" value="Dodaj 7 kolejnych dni">
+                    </form>
+                </div>
+            </div>
+            <div id="noteStats">
+                <table id="engTable" class="todayTable">
+                    <tr>
+                        <td colspan="2">Statystyki</td>
+                    </tr>
+                    <tr>
+                        <td>Łącznie powtórzonych English:</td>
+                        <td><?php echo $sumRepeatedEng; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Łącznie powtórzonych EngExe:</td>
+                        <td><?php echo $sumRepeatedEngExe; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Łącznie powtórzonych Deutsh:</td>
+                        <td><?php echo $sumRepeatedDeu; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Łącznie powtórzonych DeuExe:</td>
+                        <td><?php echo $sumRepeatedDeuExe; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Łącznie powtórzonych Java:</td>
+                        <td><?php echo $sumRepeatedJavaExe; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Całkowita liczba punktów z zadań:</td>
+                        <td><?php echo round($sumWorksPoints, 2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Liczba punktów z zadań bez przerwy:</td>
+                        <td><?php echo round($worksPointsWithoutBreak,2); ?></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deutsch</title>
+    <link rel="icon" href="./view/images/favicon.ico" />
+    <link rel="stylesheet" href="./view/cssJS/layout.css">
+    <script src="./view/cssJS/jquery-3.2.1.js"></script>
+    <script src="./view/cssJS/script.js"></script>
+</head>
+<body>
+<div id="main">
+    <div id="header">
+        <a href="index.php?archive">Archiwum</a>
+        <a href="index.php?exeJava">Java</a>
+        <a href="index.php?exeDeu">Deutsch Exe</a>
+        <a href="index.php?deu">Deutsch</a>
+        <a href="index.php?exeEng">English Exe</a>
+        <a href="index.php?eng">English</a>
+        <a href="index.php">Note</a>
+    </div>
+    <div id="bodyEng">
+        <div class="engShowAll">
+            <span class="infoPageName"><center>Deutsch</center></span>
+        </div>
+        <div class="sectionMain">
+            <div id="startRepeatDeu" <?php if($repeatStartedDeu == 1){echo 'style="display: none;"';}?> class="engButtons">Rozpocznij powtórkę</div>
+        <span <?php if($repeatStartedDeu == 0){echo 'style="display: none;"';}?> >Już rozpoczęte! Do końca zostało: <?php echo $countWordsToEndDeu;?>
+        <br /><div style="margin-right: 4px;" onclick="$(location).attr('href', 'index.php?deu&today');" class="engButtons">Wejdź</div><div id="breakRepeatWordsDeu" class="engButtons">Przerwij</div></span>
+        <br />
+        <div id="resetWordsDeu" class="engButtons">Zresetuj słowa</div>
+        <br />Ä - ä - Ö - ö - Ü - ü - ß
+        <br />
+        <form action="index.php?deu" method="POST"><span>Dodaj nowe:</span><input class="newEngInput" name="addNewDeu" type="text" size="5" maxlength="1000" placeholder="deu"><input class="newEngInput" name="addNewPl" type="text" size="5" maxlength="1000" placeholder="pl"><input type="submit" style="visibility: hidden; position: absolute;"></form>
+        <div id="settingsDeu" class="engButtons">Ustawienia</div>
+        <br />
+        <div id="startTodayDeu" class="engButtons">Dzisiejsza powtórka</div>
+        <br />
+        <span <?php if($todayStartedDeu == 0){echo 'style="display: none;"';}?>>Do końca dzisiaj zostało: <?php echo $countWordsToEndDeu;?><br /></span>
+        <div id="resetTodayWordsDeu" class="engButtons">Zresetuj dzisiejszą powtórkę</div>
+    </div>
+    <div class="sectionMain cole">
+        <div class="engSettings" style="display: none;">
+            <span>Rozpocznij powtórkę</span>
+            <br /><br />
+            <form action="index.php?deu" method="post"><input type="text" name="startRepeatWordsFrom" size="5" maxlength="100" placeholder="od">-<input name="startRepeatWordsTo" type="text" size="5" maxlength="5" placeholder="do"><input type="submit" style="visibility: hidden; position: absolute;"></form>
+            <br />
+            <span>Podaj zakres. Jest to oddzielna powtórka niż dzisiejsza. Nie sprawdzane jest, czy ostatnio dobrze
+                poszły pewne słowa, nie są też one naliczane. Zaliczane są do codziennych zadań.</span>
+        </div>
+        <div class="engSettings" style="display: none;">
+            <span>Zresetuj słowa</span>
+            <br />
+            <div id="resetAllWordsDeu" class="engButtons">Zresetuj wszystkie</div>
+            <br />
+            <form action="index.php?deu" method="post"> <input name="resetWordsWithRangeFrom" type="text" size="5" maxlength="5" placeholder="od">-<input name="resetWordsWithRangeTo" type="text" size="5" maxlength="5" placeholder="do"><input type="submit" style="visibility: hidden; position: absolute;"> </form>
+            <br />
+            <span>Podaj zakres lub zresetuj wszystkie słowa. Przerobione słowa nie są wybierane w codziennej powtórce.
+                Ten mechanizm przywraca słowa i ponownie można je powtarzać.</span>
+        </div>
+        <div class="engSettings" style="display: none;">
+            <span>Ustawienia</span>
+            <br />
+            <form action="index.php?deu" method="POST"><span>Ilość słów w codziennej powtórce: </span><input type="text" name="todaysDeuWords" size="3" maxlength="5" value="<?php echo $todaysDeuWords;?>"></form>
+            <span>This Unit: </span><div id="changeThisUnitDeu" class="engButtons"><?php echo ($thisUnitDeu == 0)? 'OFF' : 'ON'; ?></div>
+            <br />
+            <div id="deleteThisUnitDeu" class="engButtons">Usuń słowa z This Unit</div>
+            <br />
+            <span>Działanie: </span><div id="changeWorkingDeu" class="engButtons"><?php if($workingDeu==1){echo 'Tylko wpisywanie';}elseif($workingDeu==2){echo 'Tylko wybór opcji';}else{echo 'Losowo wpisywanie i wybór opcji';}?></div>
+            <br />
+            <span>Tryb: </span><div id="changeModeDeu" class="engButtons"><?php if($modeDeu==1){echo 'pl->deu';}elseif($modeDeu==2){echo 'deu->pl';}else{echo 'pl->deu, deu->pl';}?></div><span><?php if($modeDeu==1){echo '(pl zawsze podane, trzeba wpisać deu)';}elseif($modeDeu==2){echo '(deu zawsze podane, trzeba wpisać pl)';}else{echo '(losowo pl lub deu, wpisać trzeba drugie)';}?><br />
+        </div>
+        <br />
+        <span>Ilość słów do przerobienia: <?php echo $getCountToEndAll; ?></span>
+    </div>
+    <div class="engShowAll">
+        <div class="engButtons" id="showAllWords">Wyświetl wszystkie słówka!</div>
+    </div>
+    <div class="engShowAll">
+        <table id="engTable">
+            <tr>
+                <td>ID</td>
+                <td>Deutsch</td>
+                <td>Polish</td>
+                <td>Count</td>
+                <td>This Unit</td>
+            </tr>
+            <?php
+                    if(isset($_GET['show'])){
+                        foreach($showDeu as $sE){
+                            echo '<tr>';
+            echo '<td>'.$sE->getId().'</td>';
+            echo '<td onclick="editFirstWord(this, '.$sE->getId().');">'.$sE->getDeutsch().'</td>';
+            echo '<td onclick="editSecondWord(this, '.$sE->getId().');">'.$sE->getPolish().'</td>';
+            echo '<td>'.$sE->getRepeated().'</td>';
+
+            $thisUnit = "OFF";
+            if($sE->getThisUnit() == 1){
+            $thisUnit = "ON";
+            }
+            echo '<td><a class="links" href="index.php?deu&changeThisUnit='.$sE->getId().'">'.$thisUnit.'</a></td>';
+            echo '</tr>';
+            }
+            }
+            ?>
+        </table>
+    </div>
+</div>
+
+</div>
+</body>
+</html>

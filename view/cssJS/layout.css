@@ -1,0 +1,275 @@
+body{
+    background-image: url('../images/tlo.png');
+    color: #F8F8FF;
+    margin: 0 auto;
+    height: 300px;
+}
+
+#header a:link{
+    color: #FFF;
+    background: #2F4F4F;
+    text-decoration: none;
+}
+
+#header a:visited{
+    color: #FFF;
+    background: #2F4F4F;
+    text-decoration: none;
+}
+
+#header a:hover{
+    color: #FFF;
+    background: #8FBC8F;
+    text-decoration: none;
+}
+
+#noteTable{
+    text-align: center;
+    border-spacing: 1px;
+    border: 3px solid #808080;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#noteTable td{
+    padding: 3px;
+    border: 1px solid #404040;
+}
+
+a.showJustification span {
+    display: none;
+    padding: 2px 3px;
+    margin-left: 8px;
+    width: 130px;
+}
+
+a.showJustification:hover span{
+    display: inline;
+    position: absolute;
+    margin: 15px 0 0 5px;
+    background: #dddddd;
+    border: 1px solid #b30000;
+    color: #000000;
+    text-align: center;
+}
+
+#bodyEng{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.sectionMain{
+    width: 50%;
+    background-color: #00001a;
+    height: 260px;
+    text-align: center;
+}
+
+.cole{
+    background-color: #001a33;
+}
+
+.engButtons{
+    display: inline-block;
+    color: #FFF;
+    background: #2F4F4F;
+    border: 1px solid #b30000;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 3px;
+}
+
+.engShowAll{
+    width: 100%;
+    background-color: #001a00;
+    text-align: center;
+}
+
+#engTable{
+    text-align: center;
+    border-spacing: 1px;
+    border: 3px solid #808080;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#engTable td{
+    padding: 3px;
+    border: 1px solid #404040;
+}
+
+.links{
+    color: #FFF;
+    background: #2F4F4F;
+    text-decoration: none;
+    padding: 1px 4px 1px 4px;
+}
+
+#bodyToday{
+    width: 100%;
+}
+
+.sectionToday{
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+
+@media only screen and (min-width: 361px){
+    body{
+        font-size: 18px;
+    }
+
+    #main{
+        margin: 0 auto;
+        width: 1300px;
+    }
+
+    #header{
+        width: 100%;
+        height: 30px;
+        padding-top: 10px;
+        text-align: center;
+    }
+
+    #header a:link {
+        padding: 5px;
+    }
+
+    #header a:visited{
+        padding: 5px;
+    }
+
+    #body{
+        width: 100%;
+        display: flex;
+    }
+
+    #noteWorks{
+        width: 28%;
+        background-color: #00001a;
+        height: 190px;
+    }
+
+    #noteMain {
+        width: 44%;
+        justify-content: center;
+
+    }
+
+    #noteStats{
+        width: 28%;
+        background-color: #00001a;
+        height: 230px;
+    }
+
+    #noteTable td{
+        min-width: 80px;
+    }
+
+    .infoPageName{
+        font-size: 25px;
+    }
+
+    /*##############################
+    ENG*/
+
+
+    .newEngInput{
+        width: 160px;
+    }
+
+    /*#############################
+    TODAY*/
+
+    .todayTable{
+        font-size: 16px;
+        background-color: #00001a;
+    }
+
+    /*IR VERBS */
+    .irVerbsInput{
+        width: 130px;
+    }
+
+}
+
+@media only screen and (max-width: 360px){
+    body{
+        font-size: 12px;
+
+    }
+
+    #main{
+        padding: 0 auto;
+        margin: 0 auto;
+        width: 360px;
+    }
+
+    #header{
+        width: 100%;
+        height: 20px;
+        text-align: center;
+        padding-top: 5px;
+        font-size: 10px;
+    }
+
+    #header a:link {
+        padding: 3px;
+    }
+
+    #header a:visited{
+        padding: 3px;
+    }
+
+    #body{
+        width: 100%
+    }
+
+    #noteWorks{
+        width: 100%;
+        background-color: #00001a;
+    }
+
+    #noteMain {
+        width: 100%;
+    }
+
+    #noteStats{
+        width: 100%;
+        background-color: #00001a;
+    }
+
+    #noteTable td{
+        min-width: 35px;
+    }
+
+    .infoPageName{
+        font-size: 18px;
+    }
+
+    /*##############################
+    ENG*/
+
+    .newEngInput{
+        width: 50px;
+    }
+
+    /*#############################
+    TODAY*/
+
+    .todayTable{
+        font-size: 12px;
+        background-color: #00001a;
+    }
+
+    /*IR VERBS */
+    .irVerbsInput{
+        width: 40px;
+    }
+
+}

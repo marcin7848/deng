@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>English - Today</title>
+    <link rel="icon" href="./view/images/favicon.ico" />
+    <link rel="stylesheet" href="./view/cssJS/layout.css">
+    <script src="./view/cssJS/jquery-3.2.1.js"></script>
+    <script src="./view/cssJS/script.js"></script>
+    <script type="text/javascript">
+        var voiceMap = [];
+        var myText = "";
+
+        $(document).ready(function() {
+            $("#answer").focus();
+            $("#nextWord").focus();
+
+            myText = document.getElementById('myText');
+            myText = myText.value;
+
+            myText = myText.replace("sb\'s", "somebody\'s");
+            myText = myText.replace("sb", "somebody");
+            myText = myText.replace("sth", "something");
+
+            myText = myText.replace(";", "\'");
+
+
+            function loadVoices() {
+                var voices = speechSynthesis.getVoices();
+                for (var i = 0; i < voices.length; i++) {
+                    var voice = voices[i];
+                    voiceMap[voice.name] = voice;
+                }
+            }
+
+            window.speechSynthesis.onvoiceschanged = function (e) {
+                loadVoices();
+            };
+
+            setTimeout(function(){speak();}, 100);
+
+        });
+
+        function speak(){
+            var msg = new SpeechSynthesisUtterance();
+            msg.volume = 1;
+            msg.voice = voiceMap['Google US English'];
+            msg.rate = 0.7;
+            msg.Pitch = 1;
+            msg.text = myText;
+            window.speechSynthesis.speak(msg);
+        }
+
+    </script>
+</head>
+<body>
+<div id="main">
+    <div id="header">
+        <a href="index.php?archive">Archiwum</a>
+        <a href="index.php?exeJava">Java</a>
+        <a href="index.php?exeDeu">Deutsch Exe</a>
+        <a href="index.php?deu">Deutsch</a>
+        <a href="index.php?exeEng">English Exe</a>
+        <a href="index.php?eng">English</a>
+        <a href="index.php">Note</a>
+    </div>
+    <div id="bodyToday">
+        <div class="sectionToday">
+            Do końca pozostało: <?php echo $countWordsToEndEng; ?>
+        </div>
+        <div class="sectionToday">
+            <table id="engTable" class="todayTable">
+                <tr>
+                    <td>ID</td>
+                    <td>Słowo</td>
+                    <td>Odpowiedź</td>
+                    <td>+</td>
+                </tr>
+                <tr>
+                    <form action="index.php?eng&today" method="POST">
+                    <?php if($showFirstBase == 0){ ?>
+                    <td><?php echo $showWord['id']; ?></td>
+                    <td><?php echo $showWord['word']; ?></td>
+                        <td>
+                            <?php
+                                if(empty($showWord['otherAnswers']))
+                                {
+                                    echo '<input type="text" id="answer" name="answer" size="10" maxlength="1000" autocomplete="off" /> ';
+                                 }
+                                else{
+                                    $rand = mt_rand(1,4);
+                                    $count = 1;
+                                    foreach($showWord['otherAnswers'] as $sW){
+                                        if($rand == $count)
+                                        {
+                                            echo '<input type="radio" name="answer" value="'.$showWord["answer"].'" />'.$showWord["answer"].'<br />';
+                                        }
+                                        echo '<input type="radio" name="answer" value="'.$sW.'" />'.$sW.'<br />';
+
+                                        if(($rand == 4) && ($count == 3))
+                                        {
+                                            echo '<input type="radio" name="answer" value="'.$showWord["answer"].'" />'.$showWord["answer"].'<br />';
+                                        }
+
+                                        $count++;
+                                    }
+                                }
+                            ?>
+                        </td>
+
+                        <input type="hidden" name="wordSide" value="<?php echo $showWord['wordSide'];  ?> ">
+                        <input type="hidden" name="id" value="<?php echo $showWord['id'];  ?> ">
+                        <td><input name="sendAnswer" type="submit" value="+"></td>
+                        <?php
+                            }
+                            else
+                            {
+                        ?>
+
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $tab['id']; ?></td>
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $tab['word']; ?></td>
+                        <td onclick='speak();' bgcolor='<?php echo $tab["color"]; ?>'><?php echo $tab['answer']; ?></td>
+
+                        <td bgcolor='<?php echo $tab["color"]; ?>'><input id="nextWord" name="nextWord" type="submit" value="+"></td>
+
+                        <input type="hidden" id="myText" value="<?php
+                        if($tab['wordSide'] == 1){
+                            echo $tab['answer'];
+                        }
+                        else{
+                            echo $tab['word'];
+                        }
+                        ?>">
+                        <?php
+                            }
+                        ?>
+                    </form>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
